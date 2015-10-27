@@ -23,22 +23,6 @@ end
 
 include_recipe 'mesos::install'
 
-# Check for valid configuration options
-node['mesos']['slave']['flags'].keys.each do |config_key|
-  options_hash = node['mesos']['options']['slave']
-  unless options_hash.key? config_key
-    Chef::Application.fatal!("Detected an invalid configuration option: #{config_key}. Aborting!", 1000)
-  end
-
-  unless options_hash[config_key]['version'].include?(node['mesos']['version'])
-    Chef::Application.fatal!("Detected a configuration option that isn't available for this version of Mesos: #{config_key}. Aborting!", 1000)
-  end
-
-  if options_hash[config_key]['deprecated'] == true
-    Chef::Log.warn("The following configuration option is deprecated: #{config_key}.")
-  end
-end
-
 if node['mesos']['zookeeper_exhibitor_discovery'] && node['mesos']['zookeeper_exhibitor_url']
   zk_nodes = MesosHelper.discover_zookeepers_with_retry(node['mesos']['zookeeper_exhibitor_url'])
   node.override['mesos']['slave']['flags']['master'] = 'zk://' + zk_nodes['servers'].map { |s| "#{s}:#{zk_nodes['port']}" }.join(',') + '/' +  node['mesos']['zookeeper_path']
