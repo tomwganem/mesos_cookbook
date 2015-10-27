@@ -23,25 +23,6 @@ end
 
 include_recipe 'mesos::install'
 
-# Mesos configuration validation
-ruby_block 'mesos-master-configuration-validation' do
-  block do
-    # Get Mesos --help
-    help = Mixlib::ShellOut.new("#{node['mesos']['master']['bin']} --help")
-    help.run_command
-    help.error!
-    # Extract options
-    options = help.stdout.strip.scan(/^  --(?:\[no-\])?(\w+)/).flatten - ['help']
-    # Check flags are in the list
-    node['mesos']['master']['flags'].keys.each do |flag|
-      unless options.include?(flag)
-        Chef::Application.fatal!("Invalid Mesos configuration option: #{flag}. Aborting!", 1000)
-      end
-    end
-  end
-end
-
-# ZooKeeper Exhibitor discovery
 if node['mesos']['zookeeper_exhibitor_discovery'] && node['mesos']['zookeeper_exhibitor_url']
   zk_nodes = MesosHelper.discover_zookeepers_with_retry(node['mesos']['zookeeper_exhibitor_url'])
 
