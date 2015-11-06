@@ -45,11 +45,7 @@ default['mesos']['master']['flags']['work_dir']             = '/tmp/mesos'
 #
 
 # Mesos slave binary location
-if node['mesos']['version'] == '0.21.1' || node['mesos']['version'] == '0.22.0' || node['mesos']['version'] == '0.22.1' || node['mesos']['version'] == '0.23.0'
-  default['mesos']['slave']['bin']                          = '/usr/sbin/mesos-slave'
-else
-  default['mesos']['slave']['bin']                          = '/usr/local/sbin/mesos-slave'
-end
+default['mesos']['slave']['bin']                          = '/usr/sbin/mesos-slave'
 
 # Ulimit to pass to mesos-slave process.
 default['mesos']['slave']['env']['ULIMIT']                  = '-n 16384'
