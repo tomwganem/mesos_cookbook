@@ -17,11 +17,7 @@ default['mesos']['init']    = case node['platform']
 #
 
 # Mesos master binary location
-if node['mesos']['version'] == '0.21.1' || node['mesos']['version'] == '0.22.0' || node['mesos']['version'] == '0.22.1' || node['mesos']['version'] == '0.23.0'
-  default['mesos']['master']['bin']                         = '/usr/sbin/mesos-master'
-else
-  default['mesos']['master']['bin']                         = '/usr/local/sbin/mesos-master'
-end
+default['mesos']['master']['bin']                           = '/usr/sbin/mesos-master'
 
 # Ulimit to pass to mesos-master process.
 default['mesos']['master']['env']['ULIMIT']                 = '-n 16384'
